@@ -2,6 +2,18 @@ package main
 
 import "fmt"
 
+type person struct {
+	name    string
+	age     int
+	favFood []string
+}
+
+func main() {
+	foods := []string{"pizza", "potato", "water"}
+	me := person{age: 34, name: "test", favFood: foods}
+	fmt.Println(me)
+}
+
 func totalAndResult(numbers ...int) (int, bool) {
 	total := 0
 	result := false
@@ -15,8 +27,4 @@ func totalAndResult(numbers ...int) (int, bool) {
 	}
 
 	return total, result
-}
-
-func main() {
-	fmt.Println(totalAndResult(1, 2, 3, 4, 5))
 }
