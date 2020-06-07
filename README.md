@@ -68,3 +68,52 @@
         fmt.Println(me)
     }
     ```
+
+# 2. Bank & Dictionary Projects
+* struct의 직접 생성을 막기 위해 소문자(private)로 맴버를 보호하고, 함수를 통해 생성한다.  
+* 이때 복사본이 전달되지 않고 생성한 그대로 전달되기 위해 포인터 사용
+    ```go
+    // Account Struct
+    type Account struct {
+        owner   string
+        balance int
+    }
+
+    // NewAccount creates Account
+    func NewAccount(owner string) *Account {
+        account := Account{owner: owner, balance: 0}
+        return &account
+    }
+    ```
+* pointer receiver
+펑션은 기본적으로 struct를 복사해서 가져오기에 포인터로 receiver 를 생성한다.
+    ```go
+    // Deposite x amount on your account
+    func (a *Account) Deposite(amount int) {
+        a.balance += amount
+    }
+    ```
+* error
+에러처리는 사용자가 알아서 하는 것으로, 함수에서는 에러를 리턴하고 사용하는 곳에서는 받아서 처리한다.
+    ```go
+    var errNoMoney = errors.New("Can't withdraw you are poor")
+    // Withdraw x acount on your account
+    func (a *Account) Withdraw(amount int) error {
+        if a.balance < amount {
+            return errNoMoney
+        }
+        a.balance -= amount
+        return nil
+    }
+    ......
+    err := account.Withdraw(20)
+	if err != nil {
+		fmt.Println(err)
+	}
+    ```
+* struct 의 String() 을 오버라이드하여 사용할 수 있다.
+    ```go
+    func (a Account) String() string {
+        return fmt.Sprint(a.Owner(), "'s account.\nHas: ", a.Balance())
+    }
+    ```

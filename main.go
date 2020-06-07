@@ -1,30 +1,19 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
 
-type person struct {
-	name    string
-	age     int
-	favFood []string
-}
+	"github.com/jaden-song/learngo/accounts/mydict"
+)
 
 func main() {
-	foods := []string{"pizza", "potato", "water"}
-	me := person{age: 34, name: "test", favFood: foods}
-	fmt.Println(me)
-}
-
-func totalAndResult(numbers ...int) (int, bool) {
-	total := 0
-	result := false
-
-	for _, number := range numbers {
-		total += number
+	dictionary := mydict.Dictionary{}
+	base := "hello"
+	dictionary.Add(base, "first")
+	err := dictionary.Update(base, "second")
+	if err != nil {
+		fmt.Println(err)
 	}
-
-	if total > 0 {
-		result = true
-	}
-
-	return total, result
+	err = dictionary.Delete("xx")
+	fmt.Println(err)
 }
