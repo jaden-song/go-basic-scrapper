@@ -117,3 +117,56 @@
         return fmt.Sprint(a.Owner(), "'s account.\nHas: ", a.Balance())
     }
     ```
+
+# 3. URL Checker & Go Routines
+* Go Routines
+    * 다른 함수와 함께 실행시키는 함수
+    * 단 main 함수가 실행되는 동안만 유효함
+* Channel
+    * 고루틴 사이의 정보를 공유하는 방식
+    * go 를 적용한 펑션의 리턴을 받는 방법
+* go 는 병렬로 실행하지만, chan 은 block operation
+    ```go
+    // requestResult 는 struct
+    // urls 는 string array
+    func main() {
+        results := make(map[string]string)
+        c := make(chan requestResult)
+
+        for _, url := range urls {
+            go hitURL(url, c)
+        }
+
+        for i := 0; i < len(urls); i++ {
+            result := <-c
+            results[result.url] = result.status
+        }
+    }
+
+    // 보내기만 가능한 채널이라고 지정
+    func hitURL(url string, c chan<- requestResult) {
+        resp, err := http.Get(url)
+        status := "OK"
+        if err != nil || resp.StatusCode >= 400 {
+            status = "FAILED"
+        }
+        c <- requestResult{url: url, status: status}
+    }
+    ```
+* 채널에 값을 쓰고, 읽는 표기는 <- 방향으로만 지정
+
+# 4. Job Scrapper (2020.6.9)
+* https://kr.indeed.com/jobs?q=python&limit=50 정보를 스크랩
+* html 파싱을 위해 goquery 사용
+    * `go get github.com/PuerkitoBio/goquery`
+* 파싱 결과는 csv 모듈을 통해 엑셀파일로 생성함 (이 부분도 고루틴으로 처리 필요)
+
+# 5. Web Server with Echo
+* Echo 설치
+    * `go get github.com/labstack/echo` **/v4** 빼야 되더라
+* 서버관련 참고 사이트
+    * https://echo.labstack.com/guide : 에코서버
+    * https://gobuffalo.io/en/ : 버팔로 (파이썬의 장고)
+
+
+
